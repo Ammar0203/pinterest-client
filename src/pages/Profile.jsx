@@ -1,17 +1,17 @@
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import api from "../api";
 import avatar from "../../public/avatar.png";
 import Header from "../components/Header";
 import Cards from "../components/Cards";
 import { IonIcon } from "@ionic/react";
 import { arrowBackOutline } from "ionicons/icons";
-import URLs from "../url";
+import API_URL from "../url";
 
 export default function Profile() {
   const { _id } = useParams();
-  const { user, handleUpdateProfile, handleChangePassword } = useContext(AuthContext);
+  const { user, handleUpdateUser, handleChangePassword } = useContext(AuthContext);
   
   const [profile, setProfile] = useState();
   const [edit, setEdit] = useState(false)
@@ -63,7 +63,7 @@ export default function Profile() {
       const formData = new FormData()
       formData.append('name', name)
       if(image) formData.append('avatar', image)
-      const response = await handleUpdateProfile(formData)
+      const response = await handleUpdateUser(formData)
       setEdit(false)
     }
     catch (err) {
@@ -76,8 +76,8 @@ export default function Profile() {
     e.preventDefault()
     if(error) return
     try {
-      const response = await handleChangePassword({password, newPassword})
-      setSuccessful(response)
+      const response = await api.post('/api/user/password', {password, newPassword})
+      setSuccessful(response.data)
       setTimeout(() => {
         setSuccessful(null)
       }, 5000)
@@ -140,14 +140,14 @@ export default function Profile() {
             <div style={{width: '100%', display: 'flex', justifyContent: 'center', gap: 48}}>
               <form className='form' onSubmit={onSubmit}>
                 <div className='input-container'>
-                  <img onClick={e => fileUpload.current.click()} src={image ? URL.createObjectURL(image) : (profile?.avatar ? `${URLs}/avatars/${profile?.avatar}` : avatar)} style={{borderRadius: "50%", width: 120, height: 120, objectFit: 'cover', alignSelf: 'center', cursor: 'pointer'}} />
+                  <img onClick={e => fileUpload.current.click()} src={image ? URL.createObjectURL(image) : (profile?.avatar ? `${API_URL}/avatars/${profile?.avatar}` : avatar)} style={{borderRadius: "50%", width: 120, height: 120, objectFit: 'cover', alignSelf: 'center', cursor: 'pointer'}} />
                   <input ref={fileUpload} type='file' onChange={onImageChange} style={{display: 'none'}} />
                 </div>
                 <div className='input-container'>
                   <label htmlFor='name'>Name</label>
                   <input value={name} onChange={(e) => handleInputChange(e, setName)} id="name" className='input' placeholder='Name' required autoComplete='false'/>
                 </div>
-                <div className='input-container' style={{opacity: 0.6}}>
+                <div className='input-container' style={{opacity: 0.7}}>
                   <label>Email</label>
                   <input value={profile?.email} className='input' placeholder='Email' required autoComplete='false' disabled />
                 </div>
@@ -177,7 +177,7 @@ export default function Profile() {
               <div onClick={e => setEdit(true)} className="a grey" style={{width: 'fit-content', margin: '0 16px', cursor: 'pointer'}}>Edit Profile</div>
             } 
             <div style={{display: "flex", flexDirection: "column", alignItems: "center", gap: 16, margin: '20px'}}>
-              <img src={profile?.avatar ? `${URLs}/avatars/${profile?.avatar}` : avatar} style={{borderRadius: "50%", width: 120, height: 120, objectFit: 'cover'}} />
+              <img src={profile?.avatar ? `${API_URL}/avatars/${profile?.avatar}` : avatar} style={{borderRadius: "50%", width: 120, height: 120, objectFit: 'cover'}} />
               <div style={{ fontSize: "36px" }}>{profile?.name}</div>
               <div style={{width: '100%', height: 1, backgroundColor: '#e9e9e9'}} />
             </div>

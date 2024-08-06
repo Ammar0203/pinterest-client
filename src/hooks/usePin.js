@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import api from '../api'
 import axios from 'axios'
-import URLs from '../url'
+import API_URL from '../url'
 
 export default function usePin({query, pageNumber}) {
   const [loading, setLoading] = useState(true)
@@ -19,7 +19,7 @@ export default function usePin({query, pageNumber}) {
     let cancel
     axios({
       method: 'GET',
-      url: `${URLs}/api/pin`,
+      url: `${API_URL}/api/pin`,
       params: { q: query, page: pageNumber },
       cancelToken: new axios.CancelToken(c => cancel = c)
     }).then(res => {

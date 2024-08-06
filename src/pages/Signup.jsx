@@ -1,11 +1,9 @@
-import './styles/Auth.css'
 import { useContext, useState } from "react"
-import api from "../api"
 import {Link} from 'react-router-dom'
 import { AuthContext } from '../contexts/AuthContext'
 import Header from '../components/Header'
 
-function Form({handleLogin}) {
+function Form({handleSignUp}) {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -28,8 +26,7 @@ function Form({handleLogin}) {
       if (!validateEmail(email)) {
         return setError({ email: {message: 'Invalid email'}})
       }
-      await api.post('/api/auth/signup', {name, email, password})
-      await handleLogin(email, password)
+      await handleSignUp({name, email, password})
     }
     catch (err) {
       console.log(err)
@@ -73,7 +70,7 @@ function Form({handleLogin}) {
 
 export default function Signup() {
 
-  const { isAuthenticated, user, handleLogin, handleLogout } = useContext(AuthContext);
+  const { handleSignUp } = useContext(AuthContext);
 
   return (
     <>
@@ -81,7 +78,7 @@ export default function Signup() {
       <div className='container'>
         <img src='pinterest.png' className='logo' />
         <div className='title'>Welcome to Pinterest</div>
-        <Form handleLogin={handleLogin} />
+        <Form handleSignUp={handleSignUp} />
       </div>
     </>
   )

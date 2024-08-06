@@ -1,9 +1,9 @@
 // src/api.js
 import axios from 'axios';
-import URLs from './url';
+import API_URL from './url';
 
 const api = axios.create({
-  baseURL: URLs,
+  baseURL: API_URL,
   withCredentials: true // Allow credentials (cookies) to be sent
 });
 

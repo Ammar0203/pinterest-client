@@ -2,22 +2,13 @@ import { IonIcon } from "@ionic/react";
 import Header from "../components/Header";
 import {
   arrowBackOutline,
-  chevronDownOutline,
-  chevronUpOutline,
-  heart,
-  heartOutline,
   imageOutline,
 } from "ionicons/icons";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useRef, useState } from "react";
 import api from "../api";
-import "./styles/Pin.css";
-import avatar from "../../public/avatar.png";
-import { AuthContext } from "../contexts/AuthContext";
 
 export default function Create() {
-  const { handleLike, handleAddComment, user } = useContext(AuthContext);
-  const { name } = useParams();
   const navigate = useNavigate();
 
   const [pin, setPin] = useState();
@@ -32,6 +23,22 @@ export default function Create() {
     if (!(e.target.files && e.target.files[0])) return;
     setPin(e.target.files[0]);
   }
+
+  async function handleCreatePin(e) {
+    try {
+      e.preventDefault();
+      if (!pin) return setError("Please add a pin");
+      const formData = new FormData()
+      formData.append('title', title)
+      formData.append('description', description)
+      formData.append('pin', pin)
+      const response = await api.post("/api/pin/create", formData);
+      navigate('/')
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   return (
     <>
       <Header />
@@ -87,20 +94,7 @@ export default function Create() {
           alignItems: "center",
           marginBottom: 100,
         }}
-        onSubmit={async (e) => {
-          try {
-            e.preventDefault();
-            if (!pin) return setError("Please add a pin");
-            const formData = new FormData()
-            formData.append('title', title)
-            formData.append('description', description)
-            formData.append('pin', pin)
-            const response = await api.post("/api/pin/create", formData);
-            navigate('/')
-          } catch (err) {
-            console.log(err);
-          }
-        }}
+        onSubmit={async (e) => handleCreatePin(e)}
       >
         <div
           style={{
@@ -140,7 +134,7 @@ export default function Create() {
             ) : (
               <div
                 style={{
-                  position: "absolute",
+                  // position: "absolute",
                   width: 468,
                   height: 512,
                   backgroundColor: "rgb(251 251 251)",
@@ -180,7 +174,7 @@ export default function Create() {
               name="pin"
               ref={fileUpload}
               type="file"
-              onChange={onImageChange}
+              onChange={e => onImageChange(e)}
               style={{ display: "none" }}
             />
             <div className="input-container">
@@ -227,7 +221,6 @@ export default function Create() {
               className="grey-button"
               style={{ width: "50%", alignSelf: "center" }}
               onClick={(e) => {
-                e.preventDefault();
                 navigate(-1);
               }}
             >

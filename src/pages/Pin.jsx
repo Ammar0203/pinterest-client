@@ -7,16 +7,15 @@ import {
   heart,
   heartOutline,
 } from "ionicons/icons";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
 import api from "../api";
-import "./styles/Pin.css";
 import avatar from "../../public/avatar.png";
 import { AuthContext } from "../contexts/AuthContext";
-import URLs from "../url";
+import API_URL from "../url";
 
 export default function Pin() {
-  const {handleLike, handleAddComment, user, isAuthenticated} = useContext(AuthContext)
+  const {user, isAuthenticated} = useContext(AuthContext)
   const { name } = useParams();
   const navigate = useNavigate()
 
@@ -50,9 +49,9 @@ export default function Pin() {
     }
 
     fetchImage();
-  }, []);
+  }, [user]);
 
-  async function deleteComment(e, comment) {
+  async function handleDeleteComment(e, comment) {
     try {
       const response = await api.post(`/api/comment/delete`, {comment})
       e.target.parentElement.parentElement.style.display = 'none'
@@ -62,6 +61,48 @@ export default function Pin() {
       console.log(err)
     }
   }
+
+  async function handleUpdatePin() {
+    try {
+      const response = await api.post('/api/pin/update', {title, description, pin_id: pin?._id})
+      setPin(response.data.pin)
+      setEdit(false)
+    }
+    catch (err) {
+      console.log(err)
+    }
+  }
+
+  async function handleDeletePin() {
+    try {
+      const response = await api.post('/api/pin/delete', {pin_id: pin?._id})
+      navigate(-1)
+    }
+    catch(err) {
+      console.log(err)
+    }
+  }
+
+  async function handleLike() {
+    if(!isAuthenticated) return navigate('/login')
+    const response = await api.post('/api/like', {pin_id: pin._id})
+    const liked = response.data.liked
+    setLiked(liked)
+    if(liked) setLikes(prev => (prev+1))
+    else setLikes(prev => (prev-1))
+  }
+
+  async function handleAddComment(e) {
+    e.preventDefault()
+    if(!isAuthenticated) return navigate('/login')
+    if(!comment) return;
+    const response = await api.post('/api/comment/create', {pin_id: pin._id, content: comment})
+    const newComment = response.data.comment
+    setComments(prev => [...prev, newComment])
+    setComment('')
+    setCommentsCount(prev => (prev+1))
+  }
+
   return (
     <>
       <Header />
@@ -114,7 +155,7 @@ export default function Pin() {
         <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center", width: "fit-content", borderRadius: 32, boxShadow: "rgb(211 211 211) 0px 0px 20px 0px"}}>
           {/* Pin */}
           <div style={{width: 508, borderRadius: 32, padding: 20}}>
-            <img src={`${URLs}/pins/${name}`} style={{width: "100%", objectFit: "contain", display: "flex", borderRadius: 16}}/>
+            <img src={`${API_URL}/pins/${name}`} style={{width: "100%", objectFit: "contain", display: "flex", borderRadius: 16}}/>
           </div>
           {/* Title and comments container */}
           {edit ? 
@@ -127,18 +168,7 @@ export default function Pin() {
                 <label htmlFor='description'>Description</label>
                 <textarea id="description" maxLength={1000} style={{height: 500}} placeholder='Description' required autoComplete='false' value={description} onChange={(e) => setDescription(e.target.value)} />
               </div>
-              <div className="a red" style={{width: '50%', alignSelf: 'center', cursor: 'pointer'}} 
-                onClick={async (e) => {
-                  try {
-                    const response = await api.post('/api/pin/update', {title, description, pin_id: pin?._id})
-                    setPin(response.data.pin)
-                    setEdit(false)
-                  }
-                  catch (err) {
-                    console.log(err)
-                  }
-                }}
-              >Update</div>
+              <div className="a red" style={{width: '50%', alignSelf: 'center', cursor: 'pointer'}} onClick={e => handleUpdatePin()}>Update</div>
               <div className="a grey" style={{width: '50%', alignSelf: 'center', cursor: 'pointer'}} onClick={(e) => {setTitle(pin?.title); setDescription(pin?.description); setEdit(false);}}>Cancel</div>
             </div>
             : 
@@ -149,27 +179,13 @@ export default function Pin() {
                   {/* title */}
                   {user?._id === pin?.user?._id && 
                     <div style={{display: 'flex', height: 'min-content', gap: 16, justifyContent: 'flex-end'}}>
-                      <div className="a grey" onClick={e => setEdit(true)} style={{cursor: 'pointer'}} >Edit</div>
-                      <div className="a red" style={{cursor: 'pointer'}}
-                        onClick={async (e) => {
-                          try {
-                            const response = await api.post('/api/pin/delete', {pin_id: pin?._id})
-                            navigate(-1)
-                          }
-                          catch(err) {
-                            console.log(err)
-                          }
-                        }}
-                      >Delete</div>
+                      <div className="button grey" onClick={e => setEdit(true)} style={{cursor: 'pointer'}} >Edit</div>
+                      <div className="button red" style={{cursor: 'pointer'}} onClick={(e) => handleDeletePin()}>Delete</div>
                     </div>
                   }
-                  <div className="Pin-title-ellipsis" style={{ marginBottom: 16 }}>
-                    {pin?.title}
-                  </div>
+                  <div className="Pin-title-ellipsis" style={{ marginBottom: 16 }}>{pin?.title}</div>
                   {/* description */}
-                  <div
-                    className="Pin-description-ellipsis"
-                  >
+                  <div className="Pin-description-ellipsis">
                     {pin?.description}
                     {/* <div style={{ cursor : 'pointer', color:'#3880FF'}}>Read more</div> */}
                   </div>
@@ -187,14 +203,12 @@ export default function Pin() {
                     <img
                       src={
                         pin?.user?.avatar
-                          ? `${URLs}/avatars/${pin?.user?.avatar}`
+                          ? `${API_URL}/avatars/${pin?.user?.avatar}`
                           : avatar
                       }
                       style={{ borderRadius: "50%", width: 48, height: 48, objectFit: 'cover' }}
                     />
-                    <div style={{ fontSize: "1.25rem", fontWeight: 400 }}>
-                      {pin?.user?.name}
-                    </div>
+                    <div style={{ fontSize: "1.25rem", fontWeight: 400 }}>{pin?.user?.name}</div>
                   </div>
                   {/* comments */}
                   <div style={{ display: "flex", marginBottom: 16, cursor: 'pointer' }} onClick={e => setShowComments(prev => !prev)}>
@@ -204,15 +218,13 @@ export default function Pin() {
                       style={{ margin: "0 0 0 auto", fontSize: 28 }}
                     />
                   </div>
-
                   <div style={{ display: "flex", flexDirection: "column", gap: 16 }} >
-
                     {showComments && comments?.map(comment => (
                       <div key={comment._id} style={{ display: "flex" }}>
                         <img
                           src={
                             comment?.user?.avatar
-                              ? `${URLs}/avatars/${comment?.user?.avatar}`
+                              ? `${API_URL}/avatars/${comment?.user?.avatar}`
                               : avatar
                           }
                           style={{
@@ -231,18 +243,13 @@ export default function Pin() {
                           {comment?.content}
                         </div>
                         {
-                          user?._id === comment?.user?._id && <div style={{marginLeft: 'auto', paddingLeft: 8}}><div style={{color: "red", cursor: 'pointer'}} onClick={(e) => deleteComment(e, comment)}>delete</div></div>
+                          user?._id === comment?.user?._id && <div style={{marginLeft: 'auto', paddingLeft: 8}}><div style={{color: "red", cursor: 'pointer'}} onClick={(e) => handleDeleteComment(e, comment)}>delete</div></div>
                         }
                       </div>
                     ))}
-
-
                   </div>
-
-
                 </div>
               </div>
-
               {/* Input comment bar */}
               <div
                 style={{
@@ -284,10 +291,7 @@ export default function Pin() {
                   </div>
                   <div style={{ fontWeight: 500 }}>{likes}</div>
                   <div
-                    onClick={async (e) => {
-                      if(!isAuthenticated) return navigate('/login')
-                      await handleLike(pin._id, setLiked, setLikes)
-                    }}
+                    onClick={e => handleLike()}
                     style={{
                       display: "flex",
                       justifyContent: "center",
@@ -324,15 +328,8 @@ export default function Pin() {
                   </div>
                 </div>
                 <div style={{ padding: "32px 32px" }}>
-                  <form onSubmit={async e => {
-                      e.preventDefault()
-                      if(!isAuthenticated) return navigate('/login')
-                      if(comment.length < 1) return
-                      await handleAddComment(pin._id, comment, setComments)
-                      setComment('')
-                      setCommentsCount(prev => (prev+1))
-                    }}>
-                    <input style={{}} value={comment} onChange={e => setComment(e.target.value)} placeholder="add a comment" />
+                  <form onSubmit={e => handleAddComment(e)}>
+                    <input value={comment} onChange={e => setComment(e.target.value)} placeholder="add a comment" />
                   </form>
                 </div>
               </div>

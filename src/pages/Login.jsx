@@ -1,4 +1,3 @@
-import './styles/Auth.css'
 import { useContext, useState } from "react"
 import {Link} from 'react-router-dom'
 import { AuthContext } from '../contexts/AuthContext'
@@ -10,18 +9,19 @@ function Form({handleLogin}) {
   const [error, setError] = useState(null)
 
   async function onSubmit(e) {
+    e.preventDefault()
+    if(error) return
 
     var validateEmail = function(email) {
       var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
       return re.test(email)
     };
-    e.preventDefault()
-    if(error) return
+
     try {
       if (!validateEmail(email)) {
-        return setError({ email: {message: 'Invalid email'}})
+        return setError({ email: {message: 'Invalid email.'}})
       }
-      await handleLogin(email, password)
+      await handleLogin({email, password})
     } catch (error) {
       setError(error?.response?.data)
     }
@@ -50,14 +50,13 @@ function Form({handleLogin}) {
       <Link className='redirect' to='/signup' style={{marginBottom: 50}}>
         Not on Pinterest yet? Sign up
       </Link>
-      
     </>
   )
 }
 
 export default function Login() {
 
-  const { isAuthenticated, user, handleLogin, handleLogout } = useContext(AuthContext);
+  const { handleLogin } = useContext(AuthContext);
   
   return (
     <>

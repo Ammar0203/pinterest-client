@@ -4,11 +4,10 @@ import { useNavigate } from "react-router-dom";
 import api from "../api";
 import { IonIcon } from "@ionic/react";
 import { chatbubbleOutline, heart, heartOutline } from "ionicons/icons";
-import './styles/Cards.css'
-import URLs from "../url";
+import API_URL from "../url";
 
 export default function Card({pin, innerRef}) {
-  const {isAuthenticated, handleLike} = useContext(AuthContext)
+  const {isAuthenticated} = useContext(AuthContext)
   const navigate = useNavigate()
   const { width, height, name, title } = pin;
   const pinRows = Math.floor(height / (width / 236) / 10);
@@ -28,14 +27,24 @@ export default function Card({pin, innerRef}) {
     }
     fetchIfLiked()
   }, [])
+
+  async function handleLike() {
+    if(!isAuthenticated) return navigate('/login')
+    const response = await api.post('/api/like', {pin_id: pin._id})
+    const liked = response.data.liked
+    setLiked(liked)
+    if(liked) setLikes(prev => (prev+1))
+    else setLikes(prev => (prev-1))
+  }
+
   return (
     <div
       onClick={() => navigate(`/pin/${name}`)}
-      className="Home-card"
+      className="Cards-card"
       style={{ gridRowEnd: `span ${rows}`, cursor: 'zoom-in' }}
     >
-      <div className="Home-img-background"></div>
-      <div className="Home-img-layout">
+      <div className="Cards-img-background"></div>
+      <div className="Cards-img-layout">
         <div style={{color: 'inherit', width: '100%', flexGrow: '1'}}>
           <div style={{color: 'inherit', fontSize: '1rem', display: 'inline-block', cursor: 'auto'}} onClick={(e) => e.stopPropagation()}>
             {title}
@@ -70,8 +79,8 @@ export default function Card({pin, innerRef}) {
       </div>
       <img
         ref={innerRef}
-        src={`${URLs}/pins/${name}`}
-        className="Home-img"
+        src={`${API_URL}/pins/${name}`}
+        className="Cards-img"
       />
     </div>
   );

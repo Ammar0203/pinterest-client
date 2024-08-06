@@ -1,7 +1,6 @@
 import { useCallback, useRef, useState } from "react";
 import usePin from "../hooks/usePin";
 import Card from "./Card";
-import './styles/Cards.css'
 
 export default function Cards({query}) {
   const [pageNumber, setPageNumber] = useState(1);
@@ -26,7 +25,7 @@ export default function Cards({query}) {
   return (
     pins.length > 0 ?
       <>
-        <div className="Home-pin-container">
+        <div className="Cards-pin-container">
           {pins.map((pin, index) => {
             if (pins.length === index + 1) {
               return (
@@ -38,13 +37,13 @@ export default function Cards({query}) {
           })}
         </div>
         {!hasMore &&
-          <div style={{fontSize: '2rem', fontWeight: 600, width: '100%', textAlign: 'center', marginTop: 36, opacity: 0.7}}>
+          <div style={{fontSize: '2rem', fontWeight: 600, width: '100%', textAlign: 'center', margin: '36px 0', opacity: 0.7}}>
             that's it...
           </div>
         }
       </>
       :
-      <div style={{fontSize: '2rem', fontWeight: 600, width: '100%', textAlign: 'center', marginTop: 36, opacity: 0.7}}>
+      <div style={{fontSize: '2rem', fontWeight: 600, width: '100%', textAlign: 'center', margin: '36px 0', opacity: 0.7}}>
         no pins yet...
       </div>
   );
