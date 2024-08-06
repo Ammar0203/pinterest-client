@@ -174,7 +174,7 @@ export default function Profile() {
           :
           <>
             {profile?._id === user?._id && 
-              <div onClick={e => setEdit(true)} className="a grey" style={{width: 'fit-content', margin: '0 16px', cursor: 'pointer'}}>Edit Profile</div>
+              <div onClick={e => setEdit(true)} className="button grey" style={{width: 'fit-content', margin: '0 16px', cursor: 'pointer'}}>Edit Profile</div>
             } 
             <div style={{display: "flex", flexDirection: "column", alignItems: "center", gap: 16, margin: '20px'}}>
               <img src={profile?.avatar ? `${API_URL}/avatars/${profile?.avatar}` : avatar} style={{borderRadius: "50%", width: 120, height: 120, objectFit: 'cover'}} />
