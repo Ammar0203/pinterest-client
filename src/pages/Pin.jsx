@@ -168,8 +168,8 @@ export default function Pin() {
                 <label htmlFor='description'>Description</label>
                 <textarea id="description" maxLength={1000} style={{height: 500}} placeholder='Description' required autoComplete='false' value={description} onChange={(e) => setDescription(e.target.value)} />
               </div>
-              <div className="a red" style={{width: '50%', alignSelf: 'center', cursor: 'pointer'}} onClick={e => handleUpdatePin()}>Update</div>
-              <div className="a grey" style={{width: '50%', alignSelf: 'center', cursor: 'pointer'}} onClick={(e) => {setTitle(pin?.title); setDescription(pin?.description); setEdit(false);}}>Cancel</div>
+              <div className="button red" style={{width: '50%', alignSelf: 'center', cursor: 'pointer'}} onClick={e => handleUpdatePin()}>Update</div>
+              <div className="button grey" style={{width: '50%', alignSelf: 'center', cursor: 'pointer'}} onClick={(e) => {setTitle(pin?.title); setDescription(pin?.description); setEdit(false);}}>Cancel</div>
             </div>
             : 
             <div style={{width: 508, display: "flex", flexDirection: "column", justifyContent: "flex-end", position: "relative"}}>
