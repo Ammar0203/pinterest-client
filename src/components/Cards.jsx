@@ -43,8 +43,10 @@ export default function Cards({query}) {
         }
       </>
       :
-      <div style={{fontSize: '2rem', fontWeight: 600, width: '100%', textAlign: 'center', margin: '36px 0', opacity: 0.7}}>
-        no pins yet...
-      </div>
+      !hasMore && (
+        <div style={{fontSize: '2rem', fontWeight: 600, width: '100%', textAlign: 'center', margin: '36px 0', opacity: 0.7}}>
+          no pins yet...
+        </div>
+      )
   );
 }

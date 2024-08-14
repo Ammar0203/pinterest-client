@@ -9,6 +9,8 @@ import Signup from './pages/Signup'
 import Pin from './pages/Pin'
 import Profile from './pages/Profile'
 import Create from './pages/Create'
+import UpdateProfile from './pages/UpdateProfile'
+import Passsword from './pages/Password'
 
 function App() {
   const { isAuthenticated, user, handleLogin, handleLogout } = useContext(AuthContext);
@@ -20,6 +22,8 @@ function App() {
         <Route path='/signup' element={<AppRoute can={!isAuthenticated} redirectTo='/' ><Signup/></AppRoute>} />
         <Route path='/create' element={<AppRoute can={isAuthenticated} redirectTo='/login' ><Create /></AppRoute>} />
         <Route path='/pin/:name' element={<Pin />} />
+        <Route path='/profile/update' element={<AppRoute can={isAuthenticated} redirectTo='/login' ><UpdateProfile /></AppRoute>} />
+        <Route path='/profile/password' element={<AppRoute can={isAuthenticated} redirectTo='/login' ><Passsword /></AppRoute>} />
         <Route path='/profile/:_id' element={<Profile />} />
       </Routes>
     </>

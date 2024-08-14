@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
 import pinterest from "../../public/pinterest.png";
 import avatar from '../../public/avatar.png'
@@ -11,6 +11,8 @@ function Header() {
   const { isAuthenticated, user, handleLogout } = useContext(AuthContext);
   
   const location = useLocation()
+  const navigate = useNavigate()
+
   const headerRef = useRef();
 
   useEffect(() => {
@@ -77,6 +79,8 @@ function Header() {
                   <IonIcon icon={chevronDownOutline} style={{ borderRadius: "50%", width: '1.5rem', zIndex: 1 }} />
                 </div>
                 <div className="dropdown-content">
+                  <div style={{ textAlign: 'center', fontSize: '1rem', cursor: 'pointer' }} onClick={e => navigate('/profile/update')} >Update Profile</div>
+                  <div style={{ textAlign: 'center', fontSize: '1rem', cursor: 'pointer' }} onClick={e => navigate('/profile/password')} >Change Password</div>
                   <div style={{ color: 'red', textAlign: 'center', fontSize: '1rem', cursor: 'pointer' }} onClick={e => handleLogout()} >Logout</div>
                 </div>
               </li>
