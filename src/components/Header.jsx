@@ -6,6 +6,7 @@ import avatar from '../../public/avatar.png'
 import { IonIcon } from "@ionic/react";
 import { chevronDownOutline } from "ionicons/icons";
 import API_URL from "../url";
+import Avatar from "./Avatar";
 
 function Header() {
   const { isAuthenticated, user, handleLogout } = useContext(AuthContext);
@@ -60,7 +61,7 @@ function Header() {
                 <Link className="a" to={`/profile/${user?._id}`} style={{ display: 'flex', fontSize: '1rem', textDecoration: 'none', }}>
                   {user?.name}
                   <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: '2.5rem', height: '2.5rem', borderRadius: '50%' }}>
-                    <img src={user?.avatar ? `${API_URL}/avatars/${user?.avatar}` : avatar} style={{ borderRadius: "50%", width: '1.5rem', height: '1.5rem', zIndex: 1, objectFit: 'cover' }} />
+                    <Avatar src={user?.avatar} style={{width: '1.5rem', height: '1.5rem'}} />
                   </div>
                 </Link>
               </li>

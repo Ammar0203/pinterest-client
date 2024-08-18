@@ -29,7 +29,7 @@ export default function Cards({query}) {
           {pins.map((pin, index) => {
             if (pins.length === index + 1) {
               return (
-                <Card innerRef={lastPinElementRef} key={pin.name} pin={pin} />
+                <Card innerRef={lastPinElementRef} key={pin._id} pin={pin} />
               );
             } else {
               return <Card key={pin._id} pin={pin} />;

@@ -21,7 +21,7 @@ function App() {
         <Route path='/login' element={<AppRoute can={!isAuthenticated} redirectTo='/' ><Login /></AppRoute>} />
         <Route path='/signup' element={<AppRoute can={!isAuthenticated} redirectTo='/' ><Signup/></AppRoute>} />
         <Route path='/create' element={<AppRoute can={isAuthenticated} redirectTo='/login' ><Create /></AppRoute>} />
-        <Route path='/pin/:name' element={<Pin />} />
+        <Route path='/pin/:_id' element={<Pin />} />
         <Route path='/profile/update' element={<AppRoute can={isAuthenticated} redirectTo='/login' ><UpdateProfile /></AppRoute>} />
         <Route path='/profile/password' element={<AppRoute can={isAuthenticated} redirectTo='/login' ><Passsword /></AppRoute>} />
         <Route path='/profile/:_id' element={<Profile />} />

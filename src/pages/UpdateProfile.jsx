@@ -5,6 +5,7 @@ import Header from '../components/Header'
 import avatar from '../../public/avatar.png'
 import API_URL from "../url"
 import Error from "../components/Error"
+import Avatar from "../components/Avatar"
 
 function Form() {
 
@@ -61,7 +62,7 @@ function Form() {
     <>
       <form className='form' onSubmit={onSubmit}>
         <div className='input-container'>
-          <img onClick={e => fileUpload.current.click()} src={image ? URL.createObjectURL(image) : (user?.avatar ? `${API_URL}/avatars/${user?.avatar}` : avatar)} style={{borderRadius: "50%", width: 120, height: 120, objectFit: 'cover', alignSelf: 'center', cursor: 'pointer'}} />
+          <Avatar onClick={e => fileUpload.current.click()} src={image ? URL.createObjectURL(image) : user?.avatar} style={{width: 120, height: 120, cursor: 'pointer', alignSelf: 'center'}} />
           <input ref={fileUpload} type='file' onChange={onImageChange} style={{display: 'none'}} />
         </div>
         <div className='input-container'>

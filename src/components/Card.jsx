@@ -9,7 +9,7 @@ import API_URL from "../url";
 export default function Card({pin, innerRef}) {
   const {isAuthenticated} = useContext(AuthContext)
   const navigate = useNavigate()
-  const { width, height, name, title } = pin;
+  const { width, height, _id, title } = pin;
   const pinRows = Math.floor(height / (width / 236) / 10);
   const rows = pinRows > 51 ? 51 : pinRows;
   const [liked, setLiked] = useState(false)
@@ -39,7 +39,7 @@ export default function Card({pin, innerRef}) {
 
   return (
     <div
-      onClick={() => navigate(`/pin/${name}`)}
+      onClick={() => navigate(`/pin/${_id}`)}
       className="Cards-card"
       style={{ gridRowEnd: `span ${rows}`, cursor: 'zoom-in' }}
     >
@@ -79,7 +79,8 @@ export default function Card({pin, innerRef}) {
       </div>
       <img
         ref={innerRef}
-        src={`${API_URL}/pins/${name}`}
+        // src={`${API_URL}/pins/${name}`}
+        src={pin?.image}
         className="Cards-img"
       />
     </div>

@@ -317,3 +317,10 @@ label {
 #description:focus {
   outline-color: #007eff;
 }
+
+.avatar {
+  border-radius: 50%;
+  width: 1.5rem;
+  height: 1.5rem;
+  object-fit: cover;
+}

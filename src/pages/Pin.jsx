@@ -13,10 +13,11 @@ import { AuthContext } from "../contexts/AuthContext";
 import API_URL from "../url";
 import EditPin from "../components/EditPin";
 import CommentInput from "../components/CommentInput";
+import Avatar from "../components/Avatar";
 
 export default function Pin() {
-  const {user, isAuthenticated} = useContext(AuthContext)
-  const { name } = useParams();
+  const {user} = useContext(AuthContext)
+  const { _id } = useParams();
   const navigate = useNavigate()
 
   const [pin, setPin] = useState();
@@ -32,12 +33,10 @@ export default function Pin() {
       setComments(comments)
     }
     async function fetchImage() {
-      const response = await api.get(`/api/pin/${name}`);
+      const response = await api.get(`/api/pin/${_id}`);
       const { pin } = response.data
       setPin(pin);
       setCommentsCount(pin.comments)
-      // setDescription(pin.description)
-      // setTitle(pin.title)
       fetchComments(pin._id)
     }
 
@@ -78,19 +77,15 @@ export default function Pin() {
 
       <div style={{display: "flex", flexDirection: "column", alignItems: "center", marginBottom: 100}}>
         <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center", width: "fit-content", borderRadius: 32, boxShadow: "rgb(211 211 211) 0px 0px 20px 0px"}}>
-          {/* Pin */}
           <div style={{width: 508, borderRadius: 32, padding: 20}}>
-            <img src={`${API_URL}/pins/${name}`} style={{width: "100%", objectFit: "contain", display: "flex", borderRadius: 16}}/>
+            <img src={pin?.image} style={{width: "100%", objectFit: "contain", display: "flex", borderRadius: 16}}/>
           </div>
-          {/* Title and comments container */}
           {edit ? 
             <EditPin setEdit={setEdit} setPin={setPin} pin={pin} />
             : 
             <div style={{width: 508, display: "flex", flexDirection: "column", justifyContent: "flex-end", position: "relative"}}>
-              {/* Title and description and comments section */}
               <div style={{ margin: 32, marginTop: 20, flexGrow: 1 }}>
                 <div style={{flexGrow: 1, overflow: "auto"}}>
-                  {/* title */}
                   {user?._id === pin?.user?._id && 
                     <div style={{display: 'flex', height: 'min-content', gap: 16, justifyContent: 'flex-end'}}>
                       <div className="button grey" onClick={e => setEdit(true)} style={{cursor: 'pointer'}} >Edit</div>
@@ -98,17 +93,13 @@ export default function Pin() {
                     </div>
                   }
                   <div className="Pin-title-ellipsis" style={{ marginBottom: 16 }}>{pin?.title}</div>
-                  {/* description */}
                   <div className="Pin-description-ellipsis">
                     {pin?.description}
-                    {/* <div style={{ cursor : 'pointer', color:'#3880FF'}}>Read more</div> */}
                   </div>
-                  {/* user pic + name */}
                   <div style={{display: "flex", alignItems: "center", gap: 16, margin: "24px 0", cursor: 'pointer'}} onClick={e => navigate(`/profile/${pin?.user?._id}`)}>
-                    <img src={pin?.user?.avatar? `${API_URL}/avatars/${pin?.user?.avatar}` : avatar} style={{ borderRadius: "50%", width: 48, height: 48, objectFit: 'cover' }}/>
+                    <Avatar src={pin?.user?.avatar} style={{width: 48, height: 48}} />
                     <div style={{ fontSize: "1.25rem", fontWeight: 400 }}>{pin?.user?.name}</div>
                   </div>
-                  {/* comments */}
                   <div style={{ display: "flex", marginBottom: 16, cursor: 'pointer' }} onClick={e => setShowComments(prev => !prev)}>
                     <div style={{ fontWeight: 600 }}>Comments</div>
                     <IonIcon icon={showComments ? chevronDownOutline : chevronUpOutline} style={{ margin: "0 0 0 auto", fontSize: 28 }}/>
@@ -116,8 +107,7 @@ export default function Pin() {
                   <div style={{ display: "flex", flexDirection: "column", gap: 16 }} >
                     {showComments && comments?.map(comment => (
                       <div key={comment._id} style={{ display: "flex" }}>
-                        <img src={comment?.user?.avatar? `${API_URL}/avatars/${comment?.user?.avatar}` : avatar} style={{borderRadius: "50%", width: 32, height: 32, marginRight: 8, objectFit: 'cover'}}/>
-
+                        <Avatar src={comment?.user?.avatar} style={{width: 32, height: 32, marginRight: 8}} />
                         <div style={{ wordBreak: "break-all" }}>
                           <span style={{ fontWeight: 500, margin: "0 8px 0 0" }}>
                             {comment?.user?.name}
@@ -132,7 +122,6 @@ export default function Pin() {
                   </div>
                 </div>
               </div>
-              {/* Input comment bar */}
               <CommentInput pin={pin} commentsCount={commentsCount} setCommentsCount={setCommentsCount} setComments={setComments} />
             </div>
           }

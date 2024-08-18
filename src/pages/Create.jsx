@@ -66,47 +66,8 @@ export default function Create() {
         </div>
         <h3 style={{ fontWeight: 600 }}>Back</h3>
       </div>
-
-      {/* <form style={{display: "flex", flexDirection: "column", alignItems: "center", marginBottom: 100}} onSubmit={async (e) => handleCreatePin(e)}>
-        <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center", width: "fit-content", borderRadius: 32, boxShadow: "rgb(211 211 211) 0px 0px 20px 0px"}}>
-          <div style={{position: "relative", width: 508, borderRadius: 32, padding: 20, display: "flex", flexDirection: 'column', alignItems: "center"}} >
-            {pin ? (
-              <img src={pin ? URL.createObjectURL(pin) : ""} style={{width: "100%", height: "min-content", objectFit: "contain", display: "flex", borderRadius: 16, objectPosition: "top", cursor: "pointer"}} onClick={(e) => fileUpload.current.click()} />
-            ) : (
-              <>
-                <div className="input" style={{width: 468, height: 512, backgroundColor: "rgb(251 251 251)", borderWidth: 3, borderColor: "#e9e9e9", borderRadius: 32, borderStyle: "dashed", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", cursor: "pointer"}} onClick={(e) => fileUpload.current.click()}>
-                  <IonIcon icon={imageOutline} style={{ fontSize: 32, opacity: 0.5 }}/>
-                  <div style={{ opacity: 0.9 }}>Click to add a pin</div>
-                </div>
-                <Error error={error} path='pin' />
-              </>
-            )}
-          </div>
-          <div style={{width: 508, display: "flex", flexDirection: "column", justifyContent: "flex-start", position: "relative", padding: 32, gap: 8}} >
-            <input name="pin" ref={fileUpload} type="file" onChange={e => onImageChange(e)} style={{ display: "none" }} />
-            <div className="input-container">
-              <label htmlFor="title">Title</label>
-              <input name="title" id="title" maxLength={64} minLength={1} className="input" placeholder="Title"  autoComplete="false" value={title} onChange={(e) => handleInputChange(e, setTitle)} />
-              <Error error={error} path='title' />
-            </div>
-            <div className="input-container">
-              <label htmlFor="description">Description</label>
-              <textarea className="textarea" name="description" id="description" maxLength={1000} minLength={1} style={{ height: 500 }} placeholder="Description"  autoComplete="false" value={description} onChange={(e) => handleInputChange(e, setDescription)}/>
-              <Error error={error} path='description' />
-            </div>
-            <button disabled={disabled || error} type="submit" className="red-button" style={{ width: "50%", alignSelf: "center" }}>
-              Create
-            </button>
-            <button className="grey-button" style={{ width: "50%", alignSelf: "center" }} onClick={(e) => {navigate('/');}}>
-              Cancel
-            </button>
-          </div>
-        </div>
-      </form> */}
-
       <form style={{display: "flex", flexDirection: "column", alignItems: "center", marginBottom: 100}} onSubmit={async (e) => handleCreatePin(e)}>
         <div style={{display: "flex", flexDirection: 'column', alignItems: "center", width: "fit-content", borderRadius: 32, boxShadow: "rgb(211 211 211) 0px 0px 20px 0px"}}>
-          {/* Pin */}
           <div style={{display: 'flex', flexDirection: 'column'}}>
             <div style={{width: 1016, display: 'flex'}}>
               <div style={{position: "relative", width: 508, borderRadius: 32, padding: 20, display: "flex", flexDirection: 'column', alignItems: "center"}} >
@@ -122,7 +83,6 @@ export default function Create() {
                   </>
                 )}
               </div>
-              {/* Title and comments container */}
               <div style={{width: 508, display: "flex", flexDirection: "column", justifyContent: "flex-start", position: "relative", padding: 32, gap: 8}} >
                 <input name="pin" ref={fileUpload} type="file" onChange={e => onImageChange(e)} style={{ display: "none" }} />
                 <div className="input-container">
