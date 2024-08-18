@@ -30,11 +30,10 @@ export default function Card({pin, innerRef}) {
 
   async function handleLike() {
     if(!isAuthenticated) return navigate('/login')
-    const response = await api.post('/api/like', {pin_id: pin._id})
-    const liked = response.data.liked
-    setLiked(liked)
-    if(liked) setLikes(prev => (prev+1))
+    api.post('/api/like', {pin_id: pin?._id})
+    if(!liked) setLikes(prev => (prev+1))
     else setLikes(prev => (prev-1))
+    setLiked(prev => !prev)
   }
 
   return (
