@@ -25,23 +25,33 @@ export default function Pin() {
   const [comments, setComments] = useState()
   const [edit, setEdit] = useState(false)
   const [commentsCount, setCommentsCount] = useState(0)
+  const [image, setImage] = useState(null)
 
   useEffect(() => {
-    async function fetchComments(pin_id) {
-      const response = await api.get(`/api/comment?pin_id=${pin_id}`)
+    async function fetchComments() {
+      const response = await api.get(`/api/comment?pin_id=${_id}`)
       const { comments } = response.data
       setComments(comments)
     }
-    async function fetchImage() {
+    fetchComments()
+    async function fetchPin() {
       const response = await api.get(`/api/pin/${_id}`);
       const { pin } = response.data
       setPin(pin);
       setCommentsCount(pin.comments)
-      fetchComments(pin._id)
     }
-
-    fetchImage();
-  }, [user]);
+    fetchPin();
+    async function fetchImage() {
+      try {
+        const response = await api.get(`/api/pin/image/${_id}`)
+        setImage(response.data.image)
+      }
+      catch (err) {
+        console.log(err)
+      }
+    }
+    fetchImage()
+  }, []);
 
   async function handleDeleteComment(e, comment) {
     try {
@@ -78,7 +88,7 @@ export default function Pin() {
       <div style={{display: "flex", flexDirection: "column", alignItems: "center", marginBottom: 100}}>
         <div style={{display: "flex", flexWrap: "wrap", justifyContent: "center", width: "fit-content", borderRadius: 32, boxShadow: "rgb(211 211 211) 0px 0px 20px 0px"}}>
           <div style={{width: 508, borderRadius: 32, padding: 20}}>
-            <img src={pin?.image} style={{width: "100%", objectFit: "contain", display: "flex", borderRadius: 16}}/>
+            <img src={image?.image} style={{width: "100%", objectFit: "contain", display: "flex", borderRadius: 16}}/>
           </div>
           {edit ? 
             <EditPin setEdit={setEdit} setPin={setPin} pin={pin} />
@@ -88,8 +98,8 @@ export default function Pin() {
                 <div style={{flexGrow: 1, overflow: "auto"}}>
                   {user?._id === pin?.user?._id && 
                     <div style={{display: 'flex', height: 'min-content', gap: 16, justifyContent: 'flex-end'}}>
-                      <div className="button grey" onClick={e => setEdit(true)} style={{cursor: 'pointer'}} >Edit</div>
-                      <div className="button red" style={{cursor: 'pointer'}} onClick={(e) => handleDeletePin()}>Delete</div>
+                      <button className="red-button" onClick={e => setEdit(true)} style={{cursor: 'pointer'}} >Edit</button>
+                      <button className="grey-button" style={{cursor: 'pointer'}} onClick={(e) => handleDeletePin()}>Delete</button>
                     </div>
                   }
                   <div className="Pin-title-ellipsis" style={{ marginBottom: 16 }}>{pin?.title}</div>

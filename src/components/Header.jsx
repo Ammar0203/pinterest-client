@@ -2,10 +2,8 @@ import { useContext, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
 import pinterest from "../../public/pinterest.png";
-import avatar from '../../public/avatar.png'
 import { IonIcon } from "@ionic/react";
 import { chevronDownOutline } from "ionicons/icons";
-import API_URL from "../url";
 import Avatar from "./Avatar";
 
 function Header() {
@@ -17,15 +15,25 @@ function Header() {
   const headerRef = useRef();
 
   useEffect(() => {
-    const e = document.addEventListener("scroll", () => {
+    const handleScroll = () => {
       if (headerRef.current?.offsetTop > 0)
         headerRef.current.style.boxShadow =
           "rgba(0, 0, 0, 0.1) 0px 8px 8px -8px";
       else if (headerRef.current?.offsetTop <= 0) {
         headerRef.current.style.boxShadow = "";
       }
-    });
-    return () => e;
+    }
+    document.addEventListener("scroll", handleScroll);
+
+    const handleBlur = (event) => {
+      document.querySelector('.dropdown-content').style.display = 'none'
+    }
+    document.querySelector('.dropdown')?.addEventListener('blur', handleBlur);
+
+    return () => {
+      document.removeEventListener("scroll", handleScroll)
+      document.querySelector('.dropdown')?.removeEventListener("blur", handleBlur)
+    };
   }, []);
 
   return (
@@ -65,7 +73,7 @@ function Header() {
                   </div>
                 </Link>
               </li>
-              <li className="dropdown" >
+              <li className="dropdown" tabIndex="0">
                 <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: '1.75rem', height: '1.75rem', borderRadius: '50%', cursor: 'pointer' }} 
                   onClick={(e) => {
                     const dropdownContent = document.querySelector('.dropdown-content');

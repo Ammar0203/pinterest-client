@@ -75,7 +75,7 @@ export default function Create() {
                   <img src={pin ? URL.createObjectURL(pin) : ""} style={{width: "100%", height: "min-content", objectFit: "contain", display: "flex", borderRadius: 16, objectPosition: "top", cursor: "pointer"}} onClick={(e) => fileUpload.current.click()} />
                 ) : (
                   <>
-                    <div className="input" style={{width: 468, height: 512, backgroundColor: "rgb(251 251 251)", borderWidth: 3, borderColor: "#e9e9e9", borderRadius: 32, borderStyle: "dashed", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", cursor: "pointer"}} onClick={(e) => fileUpload.current.click()}>
+                    <div className="input" style={{width: 468, height: '100%', backgroundColor: "rgb(251 251 251)", borderWidth: 3, borderColor: "#e9e9e9", borderRadius: 32, borderStyle: "dashed", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", cursor: "pointer"}} onClick={(e) => fileUpload.current.click()}>
                       <IonIcon icon={imageOutline} style={{ fontSize: 32, opacity: 0.5 }}/>
                       <div style={{ opacity: 0.9 }}>Click to add a pin</div>
                     </div>
@@ -95,14 +95,14 @@ export default function Create() {
                   <textarea className="textarea" name="description" id="description" maxLength={1000} minLength={1} style={{ height: 500 }} placeholder="Description"  autoComplete="false" value={description} onChange={(e) => handleInputChange(e, setDescription)}/>
                   <Error error={error} path='description' />
                 </div>
+                <button disabled={disabled || error} type="submit" className="red-button" style={{width: '50%', alignSelf: 'center', cursor: 'pointer'}}>
+                  Create
+                </button>
+                <button className="grey-button" style={{width: '50%', alignSelf: 'center', cursor: 'pointer'}} onClick={(e) => {navigate('/');}}>
+                  Cancel
+                </button>
               </div>
             </div>
-            <button disabled={disabled || error} type="submit" className="red-button" style={{ width: "16rem", alignSelf: "center", marginBottom: 8 }}>
-              Create
-            </button>
-            <button className="grey-button" style={{ width: "16rem", alignSelf: "center", marginBottom: 16 }} onClick={(e) => {navigate('/');}}>
-              Cancel
-            </button>
             
           </div>
         </div>

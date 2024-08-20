@@ -14,7 +14,19 @@ export default function Card({pin, innerRef}) {
   const rows = pinRows > 51 ? 51 : pinRows;
   const [liked, setLiked] = useState(false)
   const [likes, setLikes] = useState(pin.likes)
+  const [image, setImage] = useState(null)
+
   useEffect(() => {
+    async function fetchImage() {
+      try {
+        const response = await api.get(`/api/pin/image/light/${pin?._id}`)
+        setImage(response.data.image)
+      }
+      catch (err) {
+        console.log(err)
+      }
+    }
+    fetchImage()
     async function fetchIfLiked() {
       try {
         if(!isAuthenticated) return
@@ -79,7 +91,7 @@ export default function Card({pin, innerRef}) {
       <img
         ref={innerRef}
         // src={`${API_URL}/pins/${name}`}
-        src={pin?.image}
+        src={image?.image}
         className="Cards-img"
       />
     </div>
